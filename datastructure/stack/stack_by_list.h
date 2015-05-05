@@ -27,7 +27,7 @@ stack * stack_initialize ()
 /*
  * stack destory function, same as list
  */
-stack * stack_destory (stack * head)
+void stack_destory (stack * head)
 {
     list_destory (head); 
 }
@@ -35,9 +35,15 @@ stack * stack_destory (stack * head)
 /*
  * free all elements in stack
  */
-stack * stack_clear (stack  * head)
+void stack_clear (stack  * head)
 {
-    list_free (head);
+    stack * key;
+    while (head->next!=NULL){
+        key = head->next;
+        head->next =key->next;
+        sfree (key->data);
+        sfree (key);
+    } //free all nodo except head node
 }
 
 /*
@@ -79,14 +85,14 @@ void stack_push (stack * head,  void * elem)
 stack * stack_pop (stack * head)
 {
     stack * top = head->next;
-    head->next = (top ? top->next : top);
+    head->next = (top ? top->next : NULL);
     return top;
 }
 
 /*
  * travel stack,  and visit all element in stack
  */
-stack * stack_travel (stack * head, void (*action) (stack * elem))
+void stack_travel (stack * head, void (*action) (stack * elem))
 {
     list_map (head, action);
 }
