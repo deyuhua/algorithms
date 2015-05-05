@@ -90,7 +90,8 @@ void  list_delete (list *head, int index)
 {
     list * pre = head;
     list * cur = pre->next;
-    
+
+    if (list_isempty (head)) return ; //empty list, do nothing.
     for (; index!=0&&cur->next!=NULL; index--, pre=cur, cur=cur->next);
     
     pre->next = cur->next;
