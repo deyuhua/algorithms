@@ -87,7 +87,8 @@ void  list_delete (node *head, int index)
     for (; index!=0&&cur->next!=NULL; index--, pre=cur, cur=cur->next);
     
     pre->next = cur->next;
-    sfree(cur); //saftly free given node ar tail node of list
+    sfree (cur->data); //saftly free user defined data
+    sfree (cur); //saftly free given node ar tail node of list
 }
 
 /*
