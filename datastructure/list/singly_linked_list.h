@@ -110,7 +110,16 @@ node * list_prior (node * head, node * cur)
     node * prior = head;
     for (; prior->next!=cur&&prior->next!=NULL; prior=prior->next);
     //first node of list or not in list, return NULL, else return prior node
-    return cur==head->next||prior->next==NULL ? NULL : prior; 
+    return cur==NULL||cur==head->next||prior->next==NULL ? NULL : prior; 
+}
+
+/*
+ * return next node of given node, if given node is at tail of list or not find int list,
+ * just return NULL;
+ */
+node * list_next (node * head, node *cur)
+{
+    return cur ? cur->next : NULL; //if cur is NULL, just return NULL;
 }
 
 /*
@@ -129,16 +138,12 @@ int list_length (node * head)
  */
 node * list_filter (node * head, bool (*select) (node * key))
 {
-    node * key;    
     node * cur = head->next;
     node * new = list_initialize ();
     node * tail = new;
     for (; cur!=NULL; cur=cur->next){
         if (select (cur)){
-            key = (node *) smalloc (sizeof (node));            
-            key->data = cur->data;
-            key->next = tail->next;
-            tail->next = key;
+            list_insert (new, list_length (new), cur->data);
         }
     }
     return new;
@@ -149,14 +154,10 @@ node * list_filter (node * head, bool (*select) (node * key))
  */
 node * list_reverse (node * head)
 {
-    node * key;
     node * cur = head->next;
     node * new = list_initialize ();
     for (; cur!=NULL; cur=cur->next){
-        key = (node *) smalloc (sizeof (node));
-        key->data = cur->data;
-        key->next = new->next;
-        new->next = key;
+        list_insert (new, 0, cur->data);
     }
     return new;
 }
