@@ -80,11 +80,9 @@ stack * stack_top (stack * head)
  */
 void stack_push (stack * head,  void * elem)
 {
-    if (top_stack >= size_stack){
-        perror("stack full\n");
-        return ;
+    if (top_stack < size_stack){
+        head[top_stack++].data = elem;
     }
-    head[top_stack++].data = elem;
 }
 
 /*
