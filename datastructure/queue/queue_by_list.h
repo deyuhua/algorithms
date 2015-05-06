@@ -34,7 +34,7 @@ queue * queue_initialize ()
 void queue_destory (queue * head)
 {
     list_destory (head);
-    tail = NULL;
+    tail = NULL; //queue not exist, so tail is NULL.
 }
 
 /*
@@ -71,7 +71,7 @@ int queue_length (queue * head)
 /*
  * return head elment in queue
  */
-queue * queue_top (queue * head)
+queue * queue_head (queue * head)
 {
     return head->next;
 }
