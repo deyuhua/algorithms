@@ -148,7 +148,6 @@ list * list_filter (list * head, bool (*select) (list * key))
 {
     list * cur = head->next;
     list * new = list_initialize ();
-    list * tail = new;
     for (; cur!=NULL; cur=cur->next){
         if (select (cur)){
             list_insert (new, list_length (new), cur->data);
