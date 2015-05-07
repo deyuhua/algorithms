@@ -83,7 +83,7 @@ void queue_en (queue * head,  void * elem)
     //number of element of queue when queue is full equal INIT_SIZE-1
     if (queue_length (head) < INIT_SIZE){ 
         head[rear%INIT_SIZE].data = elem;
-        rear = (++rear) % INIT_SIZE;
+        rear = (rear+1) % INIT_SIZE;
     }
 }
 
@@ -98,7 +98,7 @@ queue * queue_de (queue * head)
     top = (queue *) smalloc (sizeof (queue));
     top->data = head[front].data;
     head[front].data = NULL;
-    front = (++ front) % INIT_SIZE;
+    front = (front+1) % INIT_SIZE;
     return top;
 }
 
@@ -109,5 +109,5 @@ void queue_travel (queue * head, void (*action) (queue * elem))
 {
     int key;
     if (queue_isempty (head)) return;
-    for (key=front; key!=rear; action(&(head[key])), key=(++key)%INIT_SIZE);    
+    for (key=front; key!=rear; action(&(head[key])), key=(key+1)%INIT_SIZE);    
 }
