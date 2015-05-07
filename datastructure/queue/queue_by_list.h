@@ -94,7 +94,8 @@ void queue_en (queue * head, void * data)
 queue * queue_de (queue * head)
 {
     queue * top = head->next;
-    //if queue is empty, then return NULL    
+    tail = head->next==tail ? head : tail;
+    //if queue is empty, then return NULL
     head->next = (top ? top->next : NULL);  
     return top;
 }
