@@ -1,11 +1,5 @@
 /*
  * Auhtor: deyuhua, email: deyuhua@gmail.com
-
- * red-black tree contain five fileds.
- * (1).A pointer that point to parent of node;
- * (2).Data field hold address of user data.
- * (3).A pointer that point to right child of node;
- * (4).A pointer that point to left child of node;
  */
 
 #include "../queue/queue_by_list.h"
@@ -19,7 +13,8 @@ typedef enum {red=0, black} color;
  */
 struct _treenode {
     struct _treenode * p; //point to parent of node;
-    void * data; //hold address of user data;
+    void * key;
+    void * info;
     struct _treenode * right; //point to right of node;
     struct _treenode * left; //point to left of node.
     color c;  //mark node with red or black
@@ -50,13 +45,13 @@ tree * rbtree_initialize ()
     //alloc nil node
     tmp = t->nil = (rbtree *) smalloc (sizeof (rbtree));
     t->nil->left = t->nil->right = t->nil->p = tmp;
-    t->nil->data = NULL;
+    t->nil->key = t->nil->info = NULL;
     t->nil->c = black;    //color of nil node is black, as leaf.
     NIL = t->nil;   //global NIL
     //alloc t of tree
     t->root = (rbtree *) smalloc (sizeof (rbtree));
     t->root->left = t->root->right = t->root->p = NIL;
-    t->root->data = NULL;
+    t->root->key = t->root->info = NULL;
     t->root->c = black;  //color of head is black, as head.
 
     return t;
@@ -175,7 +170,8 @@ void rbtree_levelorder (rbtree * root, void (*access) (rbtree *key))
 void sfree_node (rbtree * node)
 {
     if (node!=NIL){
-        sfree (node->data); //free user-defined data
+        sfree (node->key); //free user-defined data
+        sfree (node->info);
         sfree (node); //free node of red-black tree
     }
 }
@@ -359,33 +355,34 @@ void insert_fixup (tree * t, rbtree * node)
     t->root->left->c = black;
 }
 
-void rbtree_insert (tree * t, void * data,
+void rbtree_insert (tree * t, void * key, void * info,
                     int (*cmp) (rbtree * , rbtree * ))
 {
-    rbtree * node, * tmp, * key;
+    rbtree * node, * tmp, * new;
     
-    key = (rbtree *) smalloc (sizeof (rbtree));
-    key->data = data;
-    key->c = red;
-    key->left = key->right = NIL; //insert as a leaf or root
+    new = (rbtree *) smalloc (sizeof (rbtree));
+    new->key = key;
+    new->info = info;
+    new->c = red;
+    new->left = new->right = NIL; //insert as a leaf or root
 
     node = NIL;
     tmp = t->root->left;
     while (tmp!=NIL){
         node = tmp;
-        tmp = cmp (key, node) < 0 ? node->left : node->right;
+        tmp = cmp (new, node) < 0 ? node->left : node->right;
     } //find a best position, in order to insert new node.
     
-    key->p = node;
+    new->p = node;
     if (node==NIL){
-        t->root->left = key;
-    }else if (cmp (key, node)<0){
-        node->left = key;
+        t->root->left = new;
+    }else if (cmp (new, node)<0){
+        node->left = new;
     }else{
-        node->right = key;
+        node->right = new;
     }
     t->size_tree ++;
-    insert_fixup (t, key);
+    insert_fixup (t, new);
 }
 
 /*
@@ -511,8 +508,7 @@ void rbtree_delete (tree * t, rbtree * node)
         }
     }
     if (node!=NIL){
-        sfree (node->data);
-        sfree (node);     //free given node
+        sfree_node (node);
         t->size_tree --;
     }
     t->root->left->c = black;

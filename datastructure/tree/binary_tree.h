@@ -1,11 +1,5 @@
 /*
  * Auhtor: deyuhua, email: deyuhua@gmail.com
-
- * Bitree contain four fileds.
- * (1).A pointer that point to parent of node;
- * (2).Data field hold address of user data.
- * (3).A pointer that point to right child of node;
- * (4).A pointer that point to left child of node;
  */
 
 #include "../queue/queue_by_list.h"
@@ -16,7 +10,8 @@
  */
 struct _treenode {
     struct _treenode * p; //point to parent of node;
-    void * data; //hold address of user data;
+    void * key; 
+    void * info; 
     struct _treenode * right; //point to right of node;
     struct _treenode * left; //point to left of node.
 };
@@ -42,7 +37,8 @@ tree * bitree_initialize ()
     // allocte head of tree
     t->root = (bitree *) smalloc (sizeof (bitree));
     t->root->left = t->root->right = t->root->p = NULL;
-    t->root->data = NULL;
+    //    t->root->data = NULL;
+    t->root->key = t->root->info = NULL;
     //assign size of tree with zero
     t->size_tree = 0;
     return t;
@@ -158,7 +154,8 @@ void bitree_levelorder (bitree * root, void (*access) (bitree *key))
  */
 void sfree_node (bitree * node)
 {
-    sfree (node->data); //free user-defined data
+    sfree (node->key);
+    sfree (node->info);
     sfree (node); //free node of binary tree
 }
 
@@ -242,29 +239,30 @@ bitree * bitree_maximum(bitree * subroot)
  * cmp is a function pointer, compair function return valu
  * < return -1, == return 0, > return 1
  */
-void bitree_insert (tree * t, void * data,
-                    int (*cmp) (bitree * key, bitree * node))
+void bitree_insert (tree * t, void * key, void * info,
+                    int (*cmp) (bitree * , bitree * ))
 {
-    bitree * node, * tmp, * key;
+    bitree * node, * tmp, * new;
     
-    key = (bitree *) smalloc (sizeof (bitree));
-    key->data = data;
-    key->left = key->right = NULL; //insert as a leaf or root
+    new = (bitree *) smalloc (sizeof (bitree));
+    new->key = key;
+    new->info = info;
+    new->left = new->right = NULL; //insert as a leaf or root
 
     for (node=NULL, tmp=t->root->left; tmp!=NULL; ){
         node = tmp;
-        tmp = cmp (key, node) < 0 ? node->left : node->right;
+        tmp = cmp (new, node) < 0 ? node->left : node->right;
     } //find a best position, in order to insert new node.
     
-    key->p = node;
+    new->p = node;
     if (node){
-        if (cmp (key, node)<0){
-            node->left = key;
+        if (cmp (new, node)<0){
+            node->left = new;
         }else{
-            node->right = key;
+            node->right = new;
         }
     }else{
-        t->root->left = key; //tree is empty. insert new node as root
+        t->root->left = new; //tree is empty. insert new node as root
     }
     t->size_tree ++;
 }
