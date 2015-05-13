@@ -356,7 +356,7 @@ void insert_fixup (tree * t, rbtree * node)
 }
 
 void rbtree_insert (tree * t, void * key, void * info,
-                    int (*cmp) (rbtree * , rbtree * ))
+                    int (*cmp) (void * , void * ))
 {
     rbtree * node, * tmp, * new;
     
@@ -370,13 +370,13 @@ void rbtree_insert (tree * t, void * key, void * info,
     tmp = t->root->left;
     while (tmp!=NIL){
         node = tmp;
-        tmp = cmp (new, node) < 0 ? node->left : node->right;
+        tmp = cmp (new->key, node->key) < 0 ? node->left : node->right;
     } //find a best position, in order to insert new node.
     
     new->p = node;
     if (node==NIL){
         t->root->left = new;
-    }else if (cmp (new, node)<0){
+    }else if (cmp (new->key, node->key)<0){
         node->left = new;
     }else{
         node->right = new;

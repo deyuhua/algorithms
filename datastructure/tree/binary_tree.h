@@ -28,7 +28,6 @@ typedef struct _tree tree;
 
 /*
  * initialize binary tree, assign size of tree with zero;
- * return NULL, in order to initialize root pointer.
  */
 tree * bitree_initialize ()
 {
@@ -41,6 +40,7 @@ tree * bitree_initialize ()
     t->root->key = t->root->info = NULL;
     //assign size of tree with zero
     t->size_tree = 0;
+    
     return t;
 }
 
@@ -240,7 +240,7 @@ bitree * bitree_maximum(bitree * subroot)
  * < return -1, == return 0, > return 1
  */
 void bitree_insert (tree * t, void * key, void * info,
-                    int (*cmp) (bitree * , bitree * ))
+                    int (*cmp) (void *, void *))
 {
     bitree * node, * tmp, * new;
     
@@ -251,12 +251,12 @@ void bitree_insert (tree * t, void * key, void * info,
 
     for (node=NULL, tmp=t->root->left; tmp!=NULL; ){
         node = tmp;
-        tmp = cmp (new, node) < 0 ? node->left : node->right;
+        tmp = cmp (new->key, node->key) < 0 ? node->left : node->right;
     } //find a best position, in order to insert new node.
     
     new->p = node;
     if (node){
-        if (cmp (new, node)<0){
+        if (cmp (new->key, node->key)<0){
             node->left = new;
         }else{
             node->right = new;
