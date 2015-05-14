@@ -61,12 +61,12 @@ void max_heapify (heap * h , int i)
 }
 
 /*
- *build max heap
+ * build max binary heap
  */
 void build_max_heap (heap * h)
 {
     int i;
-    for (i=h->heapsize/2; i>=0; max_heapify (h, i), i--);
+    for (i=h->heapsize>>1; i>=0; max_heapify (h, i), i--);
 }
 
 /*
@@ -78,14 +78,14 @@ void heap_push (heap * h, int  elem)
         h->capacity <<= 1;
         h->data =
             (int *) srealloc (h->data, sizeof (int) * h->capacity);
-    }
+    }//if heapsize > capacity , reallocte new double size space
     h->data[h->heapsize++] = elem;
     build_max_heap (h);
 }
 
 /*
  * delete an element from heap
-*/
+ */
 void heap_pop (heap * h)
 {
     if (h->heapsize<1){
@@ -94,4 +94,13 @@ void heap_pop (heap * h)
     }
     exchange (h->data, 0, --(h->heapsize));
     build_max_heap (h);
+}
+
+/*
+ * replace max of binary heap with new element;
+ */
+void heap_replace (heap * h, int elem)
+{
+    heap_pop (h);
+    heap_push (h, elem);
 }
