@@ -473,12 +473,12 @@ void delete_fixup (tree * t, rbtree * node_fixup)
     node_fixup->c = black;
 }
 
-void rbtree_delete (tree * t, rbtree * node)
+rbtree * rbtree_delete (tree * t, rbtree * node)
 {
     rbtree * rep = node;
     rbtree * node_fixup;  //hold node that need to fixup;
     
-    if (t->size_tree==0) return ; //if tree is empty, just return 
+    if (t->size_tree==0) return NULL; //if tree is empty, just return 
 
     color node_original_color = rep->c;
     
@@ -507,10 +507,12 @@ void rbtree_delete (tree * t, rbtree * node)
             delete_fixup (t, node_fixup);
         }
     }
-    if (node!=NIL){
-        sfree_node (node);
-        t->size_tree --;
-    }
+    
     t->root->left->c = black;
     t->nil->c = black;
+    
+    if (node!=NIL){
+        t->size_tree --;
+        return node;
+    }
 }

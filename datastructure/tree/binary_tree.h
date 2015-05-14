@@ -288,11 +288,11 @@ void transplant (tree * t, bitree * node_u, bitree * node_v)
     }
 }
 
-void bitree_delete (tree * t, bitree * node)
+bitree * bitree_delete (tree * t, bitree * node)
 {
     bitree * tmp;
     
-    if (t->size_tree==0) return ; 
+    if (t->size_tree==0) return NULL; 
 
     if (node->left==NULL){ //case one
         transplant (t, node, node->right);
@@ -309,6 +309,6 @@ void bitree_delete (tree * t, bitree * node)
         tmp->left = node->left;
         node->left->p = node;
     }
-    sfree_node (node);
     t->size_tree --;
+    return node;
 }
